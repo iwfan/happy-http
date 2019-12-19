@@ -1,4 +1,5 @@
 import { HappyRequestInterface, HappyHttpOptions } from './types';
+import { isString } from './helpers';
 
 export default class HappyXHR implements HappyRequestInterface {
   request<T>(options: HappyHttpOptions): Promise<T> {
@@ -13,7 +14,15 @@ export default class HappyXHR implements HappyRequestInterface {
       xhr.onreadystatechange = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (200 <= xhr.status || xhr.status < 300) {
-            resolve(xhr.response);
+            if (isString(xhr.response)) {
+              try {
+                resolve(JSON.parse(xhr.response));
+              } catch (e) {
+                resolve((xhr.response as unknown) as T);
+              }
+            } else {
+              resolve(xhr.response);
+            }
           } else {
             reject(xhr.response);
           }
