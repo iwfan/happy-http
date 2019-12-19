@@ -12,23 +12,28 @@ export type HttpMethods =
   | 'HEAD'
   | 'head'
   | 'OPTIONS'
-  | 'options'
+  | 'options';
 
-export type HttpUrl = string
+export type HttpUrl = string;
 
 export type HttpParams = {
   [index: string]: Exclude<
     string | string[] | Date | boolean | number | object,
     null
-  >
-}
+  >;
+};
 
 export interface HappyHttpOptions {
-  method: HttpMethods
-  url: HttpUrl
-  params: HttpParams
+  readonly method?: HttpMethods;
+  readonly url?: HttpUrl;
+  readonly params?: HttpParams;
+  readonly baseUrl?: HttpUrl;
+  readonly headers?: { [index: string]: string };
+  readonly data?: any;
+  readonly timeout?: number;
+  readonly retry?: number;
 }
 
-export interface HappyHttpInterface {
-  request<T = any>(options: HappyHttpOptions): Promise<T>
+export interface HappyRequestInterface {
+  request<T = any>(options: HappyHttpOptions): Promise<T>;
 }
