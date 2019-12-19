@@ -1,14 +1,21 @@
-import DummyClass from "../src/happy"
+import HapppyHttp from '../src/happy'
 
-/**
- * Dummy test
- */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy()
+describe('HapppyHttp test', () => {
+  let happy: HapppyHttp
+
+  beforeEach(() => {
+    happy = new HapppyHttp()
   })
 
-  it("DummyClass is instantiable", () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
+  it('should can send http request', () => {
+    return happy
+      .request({
+        method: 'GET',
+        url: 'https://jsonplaceholder.typicode.com/users',
+        params: {}
+      })
+      .then(data => {
+        expect(data).toBeTruthy()
+      })
   })
 })
