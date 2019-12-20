@@ -1,22 +1,22 @@
-import { HappyRequestInterface, HappyHttpOptions } from './types';
-import HappyXHR from './happy_xhr';
+import { HappyHttpAdapter, HappyHttpConfig } from '../types';
+import XHRAdapter from '../adapters/xhr';
 import { HttpUrlSerializer } from './http_url_serializer';
 import { isValidHttpMethod, isValidHttpUrl } from './validators';
 
 export default class HappyHttp {
-  private readonly defaultOptions: HappyHttpOptions = {};
+  private readonly defaultOptions: HappyHttpConfig = {};
 
   private readonly urlSerializer = new HttpUrlSerializer();
 
-  private readonly http: HappyRequestInterface = new HappyXHR();
+  private readonly http: HappyHttpAdapter = new XHRAdapter();
 
-  constructor(options?: HappyHttpOptions) {
+  constructor(options?: HappyHttpConfig) {
     if (options) {
       this.defaultOptions = options;
     }
   }
 
-  validateOptions(options: HappyHttpOptions): void | never {
+  validateOptions(options: HappyHttpConfig): void | never {
     if (!isValidHttpMethod(options.method!)) {
       throw new TypeError(`Invalid HTTP method: ${options.method}`);
     }
@@ -26,7 +26,7 @@ export default class HappyHttp {
     }
   }
 
-  request<T>(options: HappyHttpOptions) {
+  request<T>(options: HappyHttpConfig) {
     this.validateOptions(options);
     options = Object.assign(options, {
       url: this.urlSerializer.serialize(options.url!, options.params)

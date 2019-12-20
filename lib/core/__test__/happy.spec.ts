@@ -1,4 +1,4 @@
-import HappyHttp from '../src/happy';
+import HappyHttp from '../happy';
 
 describe('HappyHttp test', () => {
   let happy: HappyHttp;

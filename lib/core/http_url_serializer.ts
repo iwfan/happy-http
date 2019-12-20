@@ -1,4 +1,4 @@
-import { HttpParams } from './types';
+import { HttpParams } from '../types';
 import {
   assert,
   isArray,
@@ -6,13 +6,13 @@ import {
   isObject,
   isString,
   toString
-} from './helpers';
+} from '../helpers';
 import {
   AMPERSAND_SIGN,
   EQUAL_SIGN,
   QUESTION_SIGN,
   REGEXP_OF_STRING_AFTER_HASH
-} from './constants';
+} from '../constants';
 
 export class HttpUrlSerializer {
   private static encode(val: string): string {

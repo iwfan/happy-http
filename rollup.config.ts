@@ -10,7 +10,7 @@ const pkg = require('./package.json')
 const libraryName = 'happy'
 
 export default {
-  input: `src/${libraryName}.ts`,
+  input: `lib/core/${libraryName}.ts`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -18,7 +18,7 @@ export default {
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
   watch: {
-    include: 'src/**',
+    include: 'lib/**',
   },
   plugins: [
     // Allow json resolution

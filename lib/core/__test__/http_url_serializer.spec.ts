@@ -1,4 +1,4 @@
-import { HttpUrlSerializer } from '../src/http_url_serializer';
+import { HttpUrlSerializer } from '../http_url_serializer';
 
 describe('As a UrlSerializer', () => {
   const serializer = new HttpUrlSerializer();

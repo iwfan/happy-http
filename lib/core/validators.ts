@@ -1,6 +1,6 @@
-import { HttpMethods, HttpUrl } from './types';
-import { isNil, isEmpty, isString } from './helpers';
-import { METHODS } from './constants';
+import { HttpMethods, HttpUrl } from '../types';
+import { isNil, isEmpty, isString } from '../helpers';
+import { METHODS } from '../constants';
 
 export const isValidHttpUrl = (url: HttpUrl) => {
   if (isNil(url)) {

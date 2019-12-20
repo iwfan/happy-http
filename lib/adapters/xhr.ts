@@ -1,8 +1,8 @@
-import { HappyRequestInterface, HappyHttpOptions } from './types';
-import { isString } from './helpers';
+import { HappyHttpAdapter, HappyHttpConfig } from '../types';
+import { isString } from '../helpers';
 
-export default class HappyXHR implements HappyRequestInterface {
-  request<T>(options: HappyHttpOptions): Promise<T> {
+export default class XHRAdapter implements HappyHttpAdapter {
+  request<T>(options: HappyHttpConfig): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onerror = () => {

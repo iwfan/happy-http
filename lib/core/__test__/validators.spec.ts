@@ -1,5 +1,5 @@
-import { isValidHttpMethod, isValidHttpUrl } from '../src/validators';
-import { HttpMethods } from '../src/types';
+import { isValidHttpMethod, isValidHttpUrl } from '../validators';
+import { HttpMethods } from '../../types';
 
 describe('As Validators', () => {
   describe('As isValidHttpMethod', () => {
