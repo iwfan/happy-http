@@ -4,7 +4,15 @@ import { HttpUrlSerializer } from './http_url_serializer';
 import { isValidHttpMethod, isValidHttpUrl } from './validators';
 
 export default class HappyHttp {
-  private readonly defaultOptions: HappyHttpConfig = {};
+  private readonly defaultOptions: HappyHttpConfig = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json, text/plain, */*'
+    },
+    responseType: 'json',
+    timeout: 0,
+    retry: 0
+  };
 
   private readonly urlSerializer = new HttpUrlSerializer();
 

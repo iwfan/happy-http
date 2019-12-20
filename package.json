@@ -50,6 +50,10 @@
       ".(ts|tsx)": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "dist"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -57,7 +61,9 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "__test__",
+      "dist"
     ],
     "coverageThreshold": {
       "global": {

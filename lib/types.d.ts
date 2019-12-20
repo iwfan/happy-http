@@ -1,18 +1,11 @@
 export type HttpMethods =
   | 'GET'
-  | 'get'
   | 'POST'
-  | 'post'
   | 'DELETE'
-  | 'delete'
   | 'PUT'
-  | 'put'
   | 'PATCH'
-  | 'patch'
   | 'HEAD'
-  | 'head'
-  | 'OPTIONS'
-  | 'options';
+  | 'OPTIONS';
 
 export type HttpUrl = string;
 
@@ -25,16 +18,20 @@ export type HttpParams = {
 
 export type HttpHeaders = { [index: string]: string };
 
-export interface HappyHttpConfig {
+export interface HappyHttpConfig<T = any> {
   readonly method?: HttpMethods;
+  readonly baseUrl?: HttpUrl;
   readonly url?: HttpUrl;
   readonly params?: HttpParams;
-  readonly baseUrl?: HttpUrl;
-  readonly headers?: { [index: string]: string };
-  readonly data?: any;
+  readonly headers?: HttpHeaders;
+  readonly data?: T;
+  readonly responseType?: XMLHttpRequestResponseType;
+  readonly credentials?: boolean;
+  readonly xsrfCookieName?: string;
+  readonly xsrfHeaderName?: string;
   readonly timeout?: number;
   readonly retry?: number;
-  readonly responseType?: XMLHttpRequestResponseType;
+  readonly retryWhen?: (response: HappyHttpResponse) => boolean;
 }
 
 export interface HappyHttpResponse<T = any> {
