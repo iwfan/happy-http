@@ -1,4 +1,4 @@
-import HappyHttp from '../happy_http';
+import HappyHttp from '../lib/core/happy_http';
 
 describe('HappyHttp test', () => {
   let happy: HappyHttp;

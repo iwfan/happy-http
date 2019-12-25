@@ -43,6 +43,6 @@ export interface HappyHttpResponse<T = any> {
   readonly request: XMLHttpRequest;
 }
 
-export interface HappyHttpAdapter {
+export interface HttpClientAdapter {
   request<T = any>(options: HappyHttpConfig): Promise<T>;
 }

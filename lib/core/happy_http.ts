@@ -1,4 +1,4 @@
-import { HappyHttpAdapter, HappyHttpConfig } from '../types';
+import { HttpClientAdapter, HappyHttpConfig } from '../types';
 import XHRAdapter from '../adapters/xhr';
 import { HttpUrlSerializer } from './http_url_serializer';
 import { isValidHttpMethod, isValidHttpUrl } from './validators';
@@ -16,7 +16,7 @@ export default class HappyHttp {
 
   private readonly urlSerializer = new HttpUrlSerializer();
 
-  private readonly http: HappyHttpAdapter = new XHRAdapter();
+  private readonly http: HttpClientAdapter = new XHRAdapter();
 
   constructor(options?: HappyHttpConfig) {
     if (options) {
