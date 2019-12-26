@@ -1,8 +1,10 @@
-import { HttpClientAdapter, HappyHttpConfig } from '../types';
+import { HttpClientAdapter } from './adapter';
+import { HttpRequest } from '../core/http_request';
+import { HttpResponse } from '../core/http_response';
 import { isString } from '../helpers';
 
 export default class XHRAdapter implements HttpClientAdapter {
-  request<T>(options: HappyHttpConfig): Promise<T> {
+  send<T, U>(options: HttpRequest): Promise<HttpResponse<U>> {
     return new Promise<T>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onerror = () => {
