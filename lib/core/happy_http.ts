@@ -1,4 +1,3 @@
-import { HttpClientAdapter, HappyHttpConfig } from '../types';
 import XHRAdapter from '../adapters/xhr';
 import { HttpUrlSerializer } from './http_url_serializer';
 import { isValidHttpMethod, isValidHttpUrl } from './validators';
