@@ -7,8 +7,9 @@ export type HttpHeadersValue = { [index: string]: string };
 export class HttpHeaders {
   private readonly headers = new Map<string, string[]>();
 
-  constructor(init?: HttpHeadersInit);
-  constructor(headers?: HttpHeaders);
+  constructor();
+  constructor(init: HttpHeadersInit);
+  constructor(headers: HttpHeaders);
   constructor(init?: HttpHeadersInit | HttpHeaders) {
     if (init instanceof HttpHeaders) {
       return init;

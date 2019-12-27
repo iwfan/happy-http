@@ -1,43 +1,42 @@
 import XHRAdapter from '../adapters/xhr';
-import { HttpUrlSerializer } from './http_url_serializer';
-import { isValidHttpMethod, isValidHttpUrl } from './validators';
+import { HttpClientAdapter } from '../adapters/adapter';
+import { HttpRequest, HttpRequestInit } from './http_request';
+import { HttpResponse } from './http_response';
 
 export default class HappyHttp {
-  private readonly defaultOptions: HappyHttpConfig = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json, text/plain, */*'
-    },
-    responseType: 'json',
-    timeout: 0,
-    retry: 0
-  };
+  // private readonly defaultOptions: HappyHttpConfig = {
+  //   method: 'GET',
+  //   headers: {
+  //     Accept: 'application/json, text/plain, */*'
+  //   },
+  //   responseType: 'json',
+  //   timeout: 0,
+  //   retry: 0
+  // };
 
-  private readonly urlSerializer = new HttpUrlSerializer();
+  private readonly client: HttpClientAdapter;
+  private readonly req: HttpRequest;
 
-  private readonly http: HttpClientAdapter = new XHRAdapter();
+  constructor();
+  constructor(init: HttpRequestInit);
+  constructor(req: HttpRequest);
+  constructor(init?: HttpRequest | HttpRequestInit) {
+    this.req = init instanceof HttpRequest ? init : new HttpRequest(init);
 
-  constructor(options?: HappyHttpConfig) {
-    if (options) {
-      this.defaultOptions = options;
-    }
+    this.client = new XHRAdapter();
   }
 
-  validateOptions(options: HappyHttpConfig): void | never {
-    if (!isValidHttpMethod(options.method!)) {
-      throw new TypeError(`Invalid HTTP method: ${options.method}`);
+  request<T>(): Promise<HttpResponse<T>>;
+  request<T>(init: HttpRequestInit): Promise<HttpResponse<T>>;
+  request<T>(req: HttpRequest): Promise<HttpResponse<T>>;
+  request<T>(init?: HttpRequest | HttpRequestInit): Promise<HttpResponse<T>> {
+    if (init) {
+      this.req.merge(init);
     }
 
-    if (!isValidHttpUrl(options.url!)) {
-      throw new TypeError(`Invalid HTTP url: ${options.url}`);
-    }
-  }
+    this.req.validate();
 
-  request<T>(options: HappyHttpConfig) {
-    this.validateOptions(options);
-    options = Object.assign(options, {
-      url: this.urlSerializer.serialize(options.url!, options.params)
-    });
-    return this.http.request<T>(options);
+    const response = this.client.send<T>(this.req);
+    return response;
   }
 }

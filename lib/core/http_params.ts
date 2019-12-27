@@ -34,8 +34,8 @@ export class HttpParams {
 
   private params = new Map<string, HttpParamValue>();
 
-  constructor(init?: HttpParamsInit);
-  constructor(params?: HttpParams);
+  constructor(init: HttpParamsInit);
+  constructor(params: HttpParams);
   constructor(readonly init?: HttpParams | HttpParamsInit) {
     if (init instanceof HttpParams) {
       return init;

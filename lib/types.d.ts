@@ -5,6 +5,13 @@ export type HttpMethods =
   | 'PUT'
   | 'PATCH'
   | 'HEAD'
-  | 'OPTIONS';
+  | 'OPTIONS'
+  | 'get'
+  | 'post'
+  | 'delete'
+  | 'put'
+  | 'patch'
+  | 'head'
+  | 'options';
 
 export type HttpUrl = string;
