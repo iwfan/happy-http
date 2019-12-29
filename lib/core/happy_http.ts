@@ -12,13 +12,12 @@ export default class HappyHttp {
     this.client = new XHRAdapter();
   }
 
-  request<T>(init?: HttpRequest | HttpRequestInit): Promise<HttpResponse<T>> {
+  request<T>(init?: HttpRequest | HttpRequestInit): Promise<T> {
     if (init) {
       this.req.merge(init);
     }
-
-    this.req.validateAndRepair();
-
+    this.req.validate();
+    this.req.process();
     const response = this.client.send<T>(this.req);
     return response;
   }

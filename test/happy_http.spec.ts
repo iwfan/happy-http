@@ -1,4 +1,5 @@
 import HappyHttp from '../lib/core/happy_http';
+import { HttpRequest } from '../lib/core/http_request';
 
 describe('HappyHttp test', () => {
   let happy: HappyHttp;
@@ -9,54 +10,81 @@ describe('HappyHttp test', () => {
 
   describe('Basic', () => {
     it('should throw invalid url when given empty url', () => {
-      expect(() => happy.request()).toThrow(
-        new TypeError(`Invalid url: undefined`)
-      );
+      expect(() => happy.request()).toThrow(new TypeError(`Invalid url: `));
     });
 
-    // it('should can send http request', () => {
-    //   return happy
-    //     .request({
-    //       method: 'get',
-    //       url: 'http://httpbin.org/'
-    //     })
-    //     .then(data => {
-    //       expect(data).toBeTruthy();
-    //     });
-    // });
+    it('should can send http request', () => {
+      return happy
+        .request({
+          url: 'http://httpbin.org/'
+        })
+        .then(data => {
+          expect(data).toBeTruthy();
+        });
+    });
 
-    // it('should auto parse text of response body', () => {
-    //   return happy
-    //     .request({
-    //       method: 'get',
-    //       url: 'http://httpbin.org/get'
-    //     })
-    //     .then(data => {
-    //       expect(typeof data).not.toBe('string');
-    //     });
-    // });
+    it('should send params to server', () => {
+      happy = new HappyHttp(
+        new HttpRequest({
+          params: { foo: 'bar' }
+        })
+      );
+
+      return happy
+        .request<{ args: object }>({
+          url: 'http://httpbin.org/get',
+          params: {
+            qux: ['baz', 'foo'],
+            date: new Date('2020-01-01 00:00:00')
+          }
+        })
+        .then(data => {
+          expect(data.args).toEqual({
+            foo: 'bar',
+            qux: ['baz', 'foo'],
+            date: '2019-12-31T16:00:00.000Z'
+          });
+        });
+    });
+
+    it('should send http headers to server', () => {
+      happy = new HappyHttp({
+        url: 'http://httpbin.org/get',
+        headers: { 'Content-Encoding': ['UTF-8', 'gbk'] }
+      });
+
+      return happy
+        .request<{ headers: {} }>(
+          new HttpRequest({
+            headers: {
+              'X-CUSTOM-HEADER-1': 'custom_header1'
+            }
+          })
+        )
+        .then(data => {
+          expect(data.headers).toEqual(
+            expect.objectContaining({
+              'Content-Encoding': 'UTF-8, gbk',
+              'X-Custom-Header-1': 'custom_header1'
+            })
+          );
+        });
+    });
+
+    it('should send string http request body to server', () => {
+      happy = new HappyHttp();
+      return happy
+        .request<{ headers: object; data: any }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: 'test_body'
+        })
+        .then(response => {
+          expect(response.headers).toEqual(
+            expect.objectContaining({ 'Content-Type': 'text/plain' })
+          );
+          expect(response.data).toBe('test_body');
+        });
+    });
   });
-
-  // describe('Send params', () => {
-  //   it('should can send params', () => {
-  //     const date = new Date();
-  //     return happy
-  //       .request<{ args: object }>({
-  //         method: 'get',
-  //         url: 'http://httpbin.org/get',
-  //         params: {
-  //           foo: 'bar',
-  //           date,
-  //           bar: ['baz', 'qux']
-  //         }
-  //       })
-  //       .then(data => {
-  //         expect(data.args).toEqual({
-  //           foo: 'bar',
-  //           date: date.toISOString(),
-  //           'bar[]': ['baz', 'qux']
-  //         });
-  //       });
-  //   });
-  // });
 });

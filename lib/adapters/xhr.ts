@@ -4,7 +4,7 @@ import { HttpResponse } from '../core/http_response';
 import { isString } from '../helpers';
 
 export default class XHRAdapter implements HttpClientAdapter {
-  send<T, U>(options: HttpRequest): Promise<HttpResponse<U>> {
+  send<T>(request: HttpRequest): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onerror = () => {
@@ -30,8 +30,11 @@ export default class XHRAdapter implements HttpClientAdapter {
           }
         }
       };
-      xhr.open(options.method!, options.url!);
-      xhr.send();
+      xhr.open(request.method!, request.url!);
+      Object.entries(request.headers.getAll()).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value);
+      });
+      xhr.send(request.serializeBody());
     });
   }
 }

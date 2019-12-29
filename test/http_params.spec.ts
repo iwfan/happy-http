@@ -15,7 +15,7 @@ describe('As HttpParams', () => {
 
   it('should be able to serialize array parameters correctly', () => {
     expect(new HttpParams({ foo: ['bar', 'baz', 'qux'] }).serialize()).toBe(
-      'foo[]=bar&foo[]=baz&foo[]=qux'
+      'foo=bar&foo=baz&foo=qux'
     );
   });
 
@@ -26,7 +26,7 @@ describe('As HttpParams', () => {
           foo: ['bar', { foo: 'bar' }, [{ foo: 'bar' }]]
         }).serialize()
       )
-    ).toBe('foo[]=bar&foo[]={"foo":"bar"}&foo[]=[{"foo":"bar"}]');
+    ).toBe('foo=bar&foo={"foo":"bar"}&foo=[{"foo":"bar"}]');
   });
 
   it('should be able to serialize date parameters correctly', () => {
@@ -51,7 +51,7 @@ describe('As HttpParams', () => {
       decodeURIComponent(
         new HttpParams({ foo: [{ qux: 'bar' }], baz: '@:$, []' }).serialize()
       )
-    ).toBe('foo[]={"qux":"bar"}&baz=@:$,+[]');
+    ).toBe('foo={"qux":"bar"}&baz=@:$,+[]');
   });
 
   it('should have all params after merge', () => {
@@ -60,7 +60,7 @@ describe('As HttpParams', () => {
     const p3 = { qux: { bar: 'foo' } };
     p1.merge(p2).merge(p3);
     expect(decodeURIComponent(p1.serialize())).toBe(
-      'foo=bar&baz[]=qux&baz[]=foo&qux={"bar":"foo"}'
+      'foo=bar&baz=qux&baz=foo&qux={"bar":"foo"}'
     );
   });
 });

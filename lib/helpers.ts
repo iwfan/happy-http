@@ -7,6 +7,8 @@ export const isString = (val: any): val is string => typeof val === 'string';
 
 export const isNumber = (val: any): val is number => typeof val === 'number';
 
+export const isBoolean = (val: any): val is boolean => typeof val === 'boolean';
+
 export const isArray = (val: any): val is any[] => Array.isArray(val);
 
 export const isObject = (val: any): val is object =>

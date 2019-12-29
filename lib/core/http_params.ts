@@ -28,10 +28,6 @@ export class HttpParams {
     return `${key}=${this.encode(value)}`;
   }
 
-  static arrayQueryPairFor(key: string, value: string) {
-    return `${key}[]=${this.encode(value)}`;
-  }
-
   private params = new Map<string, HttpParamValue>();
 
   constructor(init?: HttpParams | HttpParamsInit) {
@@ -65,7 +61,7 @@ export class HttpParams {
         if (isArray(value)) {
           return value
             .map(toString)
-            .map(str => HttpParams.arrayQueryPairFor(key, str))
+            .map(str => HttpParams.queryPairFor(key, str))
             .join('&');
         }
         return HttpParams.queryPairFor(key, value as string);

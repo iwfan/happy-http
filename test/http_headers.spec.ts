@@ -39,8 +39,8 @@ describe('As HttpHeaders', () => {
 
     expect(headers.getAll()).toEqual({
       'content-encoding': 'gzip',
-      'accept-charset': 'utf-8,gbk',
-      accept: 'application/json,text/plain,*/*'
+      'accept-charset': 'utf-8, gbk',
+      accept: 'application/json, text/plain, */*'
     });
   });
 
@@ -64,9 +64,9 @@ describe('As HttpHeaders', () => {
     });
     expect(headers.getAll()).toEqual({
       'content-encoding': 'gzip',
-      'accept-charset': 'utf-8,gbk',
+      'accept-charset': 'utf-8, gbk',
       connection: 'keep-alive',
-      accept: 'application/json,text/plain,*/*'
+      accept: 'application/json, text/plain, */*'
     });
   });
 });

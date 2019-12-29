@@ -42,7 +42,7 @@ export class HttpHeaders {
 
   getAll(): HttpHeadersValue {
     return [...this.headers.entries()].reduce(
-      (result, [key, value]) => ((result[key] = value.join(',')), result),
+      (result, [key, value]) => ((result[key] = value.join(', ')), result),
       {} as HttpHeadersValue
     );
   }

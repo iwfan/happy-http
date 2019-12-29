@@ -10,7 +10,9 @@ import {
   isBlob,
   isArrayBuffer,
   isArray,
-  isNumber
+  isNumber,
+  isBoolean,
+  toString
 } from '../helpers';
 
 export const SUPPORTED_METHODS = [
@@ -23,14 +25,14 @@ export const SUPPORTED_METHODS = [
   'OPTIONS'
 ];
 
-export const ALLOW_HAVE_BODY_METHODS = ['GET', 'DELETE', 'HEAD', 'OPTIONS'];
+export const NOT_ALLOW_HAVE_BODY_METHODS = ['GET', 'DELETE', 'HEAD', 'OPTIONS'];
 
 export interface HttpRequestInit<T = any> {
   readonly method?: HttpMethods;
   readonly url?: HttpUrl;
   readonly params?: HttpParamsInit | HttpParams;
   readonly headers?: HttpHeadersInit | HttpHeaders;
-  readonly body?: T;
+  readonly data?: T;
   readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly withCredentials?: boolean;
   // readonly xsrfCookieName?: string;
@@ -42,10 +44,10 @@ export interface HttpRequestInit<T = any> {
 
 export class HttpRequest<T = any> implements HttpRequestInit {
   readonly method: HttpMethods = 'GET';
-  readonly url?: HttpUrl;
+  readonly url: HttpUrl = '';
   readonly params: HttpParams = new HttpParams();
   readonly headers: HttpHeaders = new HttpHeaders();
-  readonly body?: T;
+  readonly data?: T;
   readonly responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json';
   readonly withCredentials?: boolean;
   readonly timeout?: number;
@@ -61,79 +63,116 @@ export class HttpRequest<T = any> implements HttpRequestInit {
   }
 
   private shouldHaveRequestBody(method: string): boolean {
-    return ALLOW_HAVE_BODY_METHODS.includes(method.toUpperCase());
+    return !NOT_ALLOW_HAVE_BODY_METHODS.includes(method.toUpperCase());
   }
 
   merge(req: HttpRequestInit | HttpRequest): HttpRequest {
-    const source: Mutable<HttpRequestInit> = {};
-
     if (isString(req.method) && this.isSupportedMethods(req.method)) {
-      source.method = req.method;
+      (this as Mutable<HttpRequest>).method = req.method;
     }
 
     if (isString(req.url) && !isEmpty(req.url)) {
-      source.url = req.url;
+      (this as Mutable<HttpRequest>).url = req.url;
     }
 
     if (isObject(req.params) && !isEmpty(req.params)) {
-      source.params = new HttpParams(req.params);
-      source.params.merge(this.params);
+      (this as Mutable<HttpRequest>).params.merge(req.params);
     }
 
     if (isObject(req.headers) && !isEmpty(req.headers)) {
-      source.headers = new HttpHeaders(req.headers);
-      source.headers.merge(this.headers);
+      (this as Mutable<HttpRequest>).headers.merge(req.headers);
     }
 
-    if (!isNil(req.body) && this.shouldHaveRequestBody(req.method as string)) {
-      source.body = req.body;
+    if (!isNil(req.data) && this.shouldHaveRequestBody(req.method as string)) {
+      (this as Mutable<HttpRequest>).data = req.data;
     }
 
     if (!isNil(req.withCredentials)) {
-      source.withCredentials = req.withCredentials;
+      (this as Mutable<HttpRequest>).withCredentials = req.withCredentials;
     }
 
     if (!isNil(req.timeout)) {
-      source.timeout = req.timeout;
+      (this as Mutable<HttpRequest>).timeout = req.timeout;
     }
 
-    Object.assign<HttpRequest, HttpRequestInit>(this, source);
     return this;
   }
 
-  validateAndRepair(): void | never {
+  validate(): void | never {
     if (!SUPPORTED_METHODS.includes(this.method!.toUpperCase())) {
       throw new TypeError(`Unsupported http methods: ${this.method}`);
     }
     if (isNil(this.url) || isEmpty(this.url)) {
       throw new TypeError(`Invalid url: ${this.url}`);
     }
-
-    if (!this.headers!.has('Content-Type')) {
-      const detectedType = this.addContentTypeHeader();
-    }
   }
 
-  addContentTypeHeader(): void {
+  private addContentTypeHeader(): void {
+    if (this.headers.has('Content-Type')) {
+      return;
+    }
     /**
      * Browser can auto add content-type header for FormData ang ArrayBuffer.
      */
-    if (isNil(this.body) || isFormData(this.body) || isArrayBuffer(this.body)) {
+    if (isNil(this.data) || isFormData(this.data) || isArrayBuffer(this.data)) {
       return;
     }
 
-    if (isBlob(this.body)) {
-      if (this.body.type) {
-        this.headers.set('Content-Type', this.body.type);
+    if (isBlob(this.data)) {
+      if (this.data.type) {
+        this.headers.set('Content-Type', this.data.type);
       }
     }
 
-    if (isString(this.body)) {
+    if (isString(this.data)) {
       this.headers.set('Content-Type', 'text/plain');
     }
 
-    if (isObject(this.body) || isArray(this.body) || isNumber(this.body)) {
+    if (
+      isObject(this.data) ||
+      isArray(this.data) ||
+      isNumber(this.data) ||
+      isBoolean(this.data)
+    ) {
       this.headers.set('Content-Type', 'application/json');
     }
+  }
+
+  private generateFullUrl(): void {
+    const joiner = this.url.includes('?') ? '&' : '?';
+    (this as Mutable<HttpRequest>).url = `${
+      this.url
+    }${joiner}${this.params.serialize()}`;
+  }
+
+  serializeBody() {
+    if (isNil(this.data)) {
+      return null;
+    }
+
+    if (
+      isArrayBuffer(this.data) ||
+      isFormData(this.data) ||
+      isBlob(this.data) ||
+      isString(this.data)
+    ) {
+      return this.data;
+    }
+
+    if (
+      isObject(this.data) ||
+      isArray(this.data) ||
+      isNumber(this.data) ||
+      isBoolean(this.data)
+    ) {
+      return JSON.stringify(this.data);
+    }
+
+    return toString(this.data);
+  }
+
+  process(): void {
+    this.generateFullUrl();
+    this.addContentTypeHeader();
   }
 }
