@@ -8,15 +8,9 @@ describe('HappyHttp test', () => {
   });
 
   describe('Basic', () => {
-    it('should throw invalid method when given empty method', () => {
-      expect(() => happy.request({})).toThrow(
-        new TypeError(`Invalid HTTP method: undefined`)
-      );
-    });
-
     it('should throw invalid url when given empty url', () => {
-      expect(() => happy.request({ method: 'get' })).toThrow(
-        new TypeError(`Invalid HTTP url: undefined`)
+      expect(() => happy.request()).toThrow(
+        new TypeError(`Invalid url: undefined`)
       );
     });
 

@@ -5,6 +5,8 @@ export const isNil = (val: any) => val == null;
 
 export const isString = (val: any): val is string => typeof val === 'string';
 
+export const isNumber = (val: any): val is number => typeof val === 'number';
+
 export const isArray = (val: any): val is any[] => Array.isArray(val);
 
 export const isObject = (val: any): val is object =>
@@ -21,6 +23,14 @@ export const toString = (val: any) =>
 export const isMap = (val: any) => toTypeString(val) === 'Map';
 
 export const isSet = (val: any) => toTypeString(val) === 'Set';
+
+export const isArrayBuffer = (val: any): val is ArrayBuffer =>
+  toTypeString(val) === 'ArrayBuffer';
+
+export const isBlob = (val: any): val is Blob => toTypeString(val) === 'Blob';
+
+export const isFormData = (val: any): val is FormData =>
+  toTypeString(val) === 'FormData';
 
 export const isEmpty = (val: any) => {
   if (isNil(val)) {

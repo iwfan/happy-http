@@ -15,3 +15,5 @@ export type HttpMethods =
   | 'options';
 
 export type HttpUrl = string;
+
+export type Mutable<T> = { -readonly [K in keyof T]: T[K] };

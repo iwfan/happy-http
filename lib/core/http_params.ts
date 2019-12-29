@@ -34,20 +34,27 @@ export class HttpParams {
 
   private params = new Map<string, HttpParamValue>();
 
-  constructor(init: HttpParamsInit);
-  constructor(params: HttpParams);
-  constructor(readonly init?: HttpParams | HttpParamsInit) {
-    if (init instanceof HttpParams) {
-      return init;
-    } else if (!isNil(init)) {
-      Object.entries(init!).forEach(([key, value]) => {
-        this.params.set(key, value);
-      });
+  constructor(init?: HttpParams | HttpParamsInit) {
+    if (init) {
+      this.merge(init);
     }
   }
 
+  merge(init: HttpParams | HttpParamsInit): HttpParams {
+    const entries =
+      init instanceof HttpParams ? init.entries() : Object.entries(init);
+    entries.forEach(([key, value]) => {
+      this.params.set(key, value);
+    });
+    return this;
+  }
+
+  entries() {
+    return [...this.params.entries()];
+  }
+
   serialize(): string {
-    return [...this.params.entries()]
+    return this.entries()
       .map(([key, value]) => {
         if (isDate(value)) {
           return HttpParams.queryPairFor(key, value.toISOString());

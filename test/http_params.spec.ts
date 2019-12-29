@@ -53,4 +53,14 @@ describe('As HttpParams', () => {
       )
     ).toBe('foo[]={"qux":"bar"}&baz=@:$,+[]');
   });
+
+  it('should have all params after merge', () => {
+    const p1 = new HttpParams({ foo: 'bar' });
+    const p2 = new HttpParams({ baz: ['qux', 'foo'] });
+    const p3 = { qux: { bar: 'foo' } };
+    p1.merge(p2).merge(p3);
+    expect(decodeURIComponent(p1.serialize())).toBe(
+      'foo=bar&baz[]=qux&baz[]=foo&qux={"bar":"foo"}'
+    );
+  });
 });

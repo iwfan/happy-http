@@ -1,4 +1,4 @@
-import { isNil, isArray } from '../helpers';
+import { isArray } from '../helpers';
 
 export type HttpHeadersInit = { [index: string]: string | string[] };
 
@@ -7,17 +7,19 @@ export type HttpHeadersValue = { [index: string]: string };
 export class HttpHeaders {
   private readonly headers = new Map<string, string[]>();
 
-  constructor();
-  constructor(init: HttpHeadersInit);
-  constructor(headers: HttpHeaders);
   constructor(init?: HttpHeadersInit | HttpHeaders) {
-    if (init instanceof HttpHeaders) {
-      return init;
-    } else if (!isNil(init)) {
-      Object.entries(init!).forEach(([key, value]) => {
-        this.set(key, value);
-      });
+    this.set('Accept', ['application/json', 'text/plain', '*/*']);
+    if (init) {
+      this.merge(init);
     }
+  }
+
+  merge(init: HttpHeadersInit | HttpHeaders): HttpHeaders {
+    const headers = init instanceof HttpHeaders ? init.getAll() : init;
+    Object.entries(headers).forEach(([key, value]) => {
+      this.set(key, value);
+    });
+    return this;
   }
 
   has(key: string) {
