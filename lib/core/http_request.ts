@@ -62,13 +62,19 @@ export class HttpRequest<T = any> implements HttpRequestInit {
     return SUPPORTED_METHODS.includes(method.toUpperCase());
   }
 
+  private isValidResponseType(responseType: string) {
+    return ['arraybuffer', 'blob', 'json', 'text'].includes(responseType);
+  }
+
   private shouldHaveRequestBody(method: string): boolean {
     return !NOT_ALLOW_HAVE_BODY_METHODS.includes(method.toUpperCase());
   }
 
   merge(req: HttpRequestInit | HttpRequest): HttpRequest {
     if (isString(req.method) && this.isSupportedMethods(req.method)) {
-      (this as Mutable<HttpRequest>).method = req.method;
+      (this as Mutable<
+        HttpRequest
+      >).method = req.method.toUpperCase() as HttpMethods;
     }
 
     if (isString(req.url) && !isEmpty(req.url)) {
@@ -83,15 +89,22 @@ export class HttpRequest<T = any> implements HttpRequestInit {
       (this as Mutable<HttpRequest>).headers.merge(req.headers);
     }
 
+    if (
+      isString(req.responseType) &&
+      this.isValidResponseType(req.responseType)
+    ) {
+      (this as Mutable<HttpRequest>).responseType = req.responseType;
+    }
+
     if (!isNil(req.data) && this.shouldHaveRequestBody(req.method as string)) {
       (this as Mutable<HttpRequest>).data = req.data;
     }
 
-    if (!isNil(req.withCredentials)) {
+    if (isBoolean(req.withCredentials)) {
       (this as Mutable<HttpRequest>).withCredentials = req.withCredentials;
     }
 
-    if (!isNil(req.timeout)) {
+    if (isNumber(req.timeout)) {
       (this as Mutable<HttpRequest>).timeout = req.timeout;
     }
 

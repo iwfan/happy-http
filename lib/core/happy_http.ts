@@ -12,7 +12,7 @@ export default class HappyHttp {
     this.client = new XHRAdapter();
   }
 
-  request<T>(init?: HttpRequest | HttpRequestInit): Promise<T> {
+  request<T>(init?: HttpRequest | HttpRequestInit) {
     if (init) {
       this.req.merge(init);
     }

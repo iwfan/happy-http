@@ -1,5 +1,6 @@
 import HappyHttp from '../lib/core/happy_http';
 import { HttpRequest } from '../lib/core/http_request';
+import { HttpResponse } from '../lib/core/http_response';
 
 describe('HappyHttp test', () => {
   let happy: HappyHttp;
@@ -31,15 +32,16 @@ describe('HappyHttp test', () => {
       );
 
       return happy
-        .request<{ args: object }>({
+        .request<HttpResponse<{ args: object }>>({
           url: 'http://httpbin.org/get',
           params: {
             qux: ['baz', 'foo'],
             date: new Date('2020-01-01 00:00:00')
           }
         })
-        .then(data => {
-          expect(data.args).toEqual({
+        .then(response => {
+          // @ts-ignore
+          expect(response.data.args).toEqual({
             foo: 'bar',
             qux: ['baz', 'foo'],
             date: '2019-12-31T16:00:00.000Z'
@@ -62,7 +64,8 @@ describe('HappyHttp test', () => {
           })
         )
         .then(data => {
-          expect(data.headers).toEqual(
+          // @ts-ignore
+          expect(data.data.headers).toEqual(
             expect.objectContaining({
               'Content-Encoding': 'UTF-8, gbk',
               'X-Custom-Header-1': 'custom_header1'
@@ -80,10 +83,10 @@ describe('HappyHttp test', () => {
           data: 'test_body'
         })
         .then(response => {
-          expect(response.headers).toEqual(
+          expect(response.data.headers).toEqual(
             expect.objectContaining({ 'Content-Type': 'text/plain' })
           );
-          expect(response.data).toBe('test_body');
+          expect(response.data.data).toBe('test_body');
         });
     });
   });
