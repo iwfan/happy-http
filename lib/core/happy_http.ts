@@ -1,7 +1,6 @@
 import XHRAdapter from '../adapters/xhr';
 import { HttpClientAdapter } from '../adapters/adapter';
 import { HttpRequest, HttpRequestInit } from './http_request';
-import { HttpResponse } from './http_response';
 
 export default class HappyHttp {
   private readonly client: HttpClientAdapter;

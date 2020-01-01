@@ -2,9 +2,8 @@ import { Api } from '../lib/decorators/decorators';
 
 describe('As Api', () => {
   it('should send request successful', () => {
-    // @ts-ignore
-    return Api.getUser().then(data => {
-      expect(data).toBe(1);
+    return Api.getUser<{ data: object }>().then(data => {
+      expect(data).toBeTruthy();
     });
   });
 });

@@ -27,13 +27,14 @@ describe('HappyHttp test', () => {
     it('should send params to server', () => {
       happy = new HappyHttp(
         new HttpRequest({
+          baseUrl: 'http://httpbin.org',
           params: { foo: 'bar' }
         })
       );
 
       return happy
         .request<HttpResponse<{ args: object }>>({
-          url: 'http://httpbin.org/get',
+          url: '/get',
           params: {
             qux: ['baz', 'foo'],
             date: new Date('2020-01-01 00:00:00')
@@ -51,7 +52,7 @@ describe('HappyHttp test', () => {
 
     it('should send http headers to server', () => {
       happy = new HappyHttp({
-        url: 'http://httpbin.org/get',
+        baseUrl: 'http://httpbin.org/get',
         headers: { 'Content-Encoding': ['UTF-8', 'gbk'] }
       });
 
@@ -71,6 +72,7 @@ describe('HappyHttp test', () => {
               'X-Custom-Header-1': 'custom_header1'
             })
           );
+          expect(data.headers.get('Content-Type')).toBe('application/json');
         });
     });
 
@@ -87,6 +89,22 @@ describe('HappyHttp test', () => {
             expect.objectContaining({ 'Content-Type': 'text/plain' })
           );
           expect(response.data.data).toBe('test_body');
+        });
+    });
+
+    it('should throw error when server response error', () => {
+      happy = new HappyHttp({
+        baseUrl: 'http://httpbin.org'
+      });
+      return happy
+        .request<{ headers: object; data: any }>({
+          method: 'get',
+          url: '/status/404'
+        })
+        .catch((response: HttpResponse) => {
+          expect(response.error).toBe(
+            'Http failure response for http://httpbin.org/status/404: 404 NOT FOUND'
+          );
         });
     });
   });

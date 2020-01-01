@@ -7,6 +7,7 @@ export class HttpResponse<T = any> {
     public readonly statusText: string,
     public readonly data: T,
     public readonly headers: HttpHeaders,
-    public readonly request: HttpRequest
+    public readonly request: HttpRequest,
+    public readonly error?: string
   ) {}
 }

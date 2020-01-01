@@ -1,4 +1,4 @@
-import { isArray } from '../helpers';
+import { isArray, isNil } from '../helpers';
 
 export type HttpHeadersInit = { [index: string]: string | string[] };
 
@@ -27,7 +27,8 @@ export class HttpHeaders {
   }
 
   get(key: string) {
-    return this.headers.get(key.toLowerCase());
+    const value = this.headers.get(key.toLowerCase());
+    return isNil(value) ? null : value!.join(', ');
   }
 
   set(key: string, value: string | string[]): HttpHeaders {

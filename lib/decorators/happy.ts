@@ -12,11 +12,13 @@ export function Happy(init?: HttpRequest | HttpRequestInit) {
   };
 }
 
-export function Get(url: string): MethodDecorator {
+export function Get(url: string) {
   // @ts-ignore
   return (target, prop, descriptor: TypedPropertyDescriptor<any>) => {
     descriptor.value = function() {
-      // @ts-ignore
+      if (!(target[happy] instanceof HappyHttp)) {
+        target[happy] = new HappyHttp();
+      }
       return (target[happy] as HappyHttp).request({ url });
     };
 

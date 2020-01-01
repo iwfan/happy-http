@@ -29,6 +29,7 @@ export const NOT_ALLOW_HAVE_BODY_METHODS = ['GET', 'DELETE', 'HEAD', 'OPTIONS'];
 
 export interface HttpRequestInit<T = any> {
   readonly method?: HttpMethods;
+  readonly baseUrl?: HttpUrl;
   readonly url?: HttpUrl;
   readonly params?: HttpParamsInit | HttpParams;
   readonly headers?: HttpHeadersInit | HttpHeaders;
@@ -44,6 +45,7 @@ export interface HttpRequestInit<T = any> {
 
 export class HttpRequest<T = any> implements HttpRequestInit {
   readonly method: HttpMethods = 'GET';
+  readonly baseUrl: HttpUrl = '';
   readonly url: HttpUrl = '';
   readonly params: HttpParams = new HttpParams();
   readonly headers: HttpHeaders = new HttpHeaders();
@@ -75,6 +77,10 @@ export class HttpRequest<T = any> implements HttpRequestInit {
       (this as Mutable<
         HttpRequest
       >).method = req.method.toUpperCase() as HttpMethods;
+    }
+
+    if (isString(req.baseUrl) && !isEmpty(req.baseUrl)) {
+      (this as Mutable<HttpRequest>).baseUrl = req.baseUrl;
     }
 
     if (isString(req.url) && !isEmpty(req.url)) {
@@ -115,8 +121,9 @@ export class HttpRequest<T = any> implements HttpRequestInit {
     if (!SUPPORTED_METHODS.includes(this.method!.toUpperCase())) {
       throw new TypeError(`Unsupported http methods: ${this.method}`);
     }
-    if (isNil(this.url) || isEmpty(this.url)) {
-      throw new TypeError(`Invalid url: ${this.url}`);
+    const url = this.getFullUrl();
+    if (isNil(url) || isEmpty(url)) {
+      throw new TypeError(`Invalid url: ${url}`);
     }
   }
 
@@ -151,11 +158,17 @@ export class HttpRequest<T = any> implements HttpRequestInit {
     }
   }
 
+  private getFullUrl(): string {
+    return `${this.baseUrl}${this.url}`;
+  }
+
   private generateFullUrl(): void {
     const joiner = this.url.includes('?') ? '&' : '?';
-    (this as Mutable<HttpRequest>).url = `${
-      this.url
-    }${joiner}${this.params.serialize()}`;
+    const url =
+      this.params.entries().length > 0
+        ? `${this.getFullUrl()}${joiner}${this.params.serialize()}`
+        : this.getFullUrl();
+    (this as Mutable<HttpRequest>).url = url;
   }
 
   serializeBody() {

@@ -9,7 +9,7 @@ describe('As HttpHeaders', () => {
 
   it('should have a default accept header', () => {
     const h = new HttpHeaders();
-    expect(h.get('Accept')).toEqual(['application/json', 'text/plain', '*/*']);
+    expect(h.get('Accept')).toEqual('application/json, text/plain, */*');
   });
 
   it('should return true when call has function with exists header key', () => {
@@ -28,7 +28,7 @@ describe('As HttpHeaders', () => {
   it('should delete successful', () => {
     const headers = new HttpHeaders();
     headers.set('Content-Encoding', 'gzip').delete('content-encoding');
-    expect(headers.get('content-encoding')).toBe(undefined);
+    expect(headers.get('content-encoding')).toBe(null);
   });
 
   it('should return entries', () => {
@@ -49,7 +49,7 @@ describe('As HttpHeaders', () => {
       Connection: 'keep-alive',
       Accept: ['application/json', 'text/plain']
     });
-    expect(headers.get('Accept')).toEqual(['application/json', 'text/plain']);
+    expect(headers.get('Accept')).toEqual('application/json, text/plain');
   });
 
   it('should have all header when call merge', () => {
