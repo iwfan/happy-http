@@ -37,7 +37,6 @@ describe('HappyHttp test', () => {
           url: '/get',
           params: {
             qux: ['baz', 'foo'],
-            date: new Date('2020-01-01 00:00:00'),
             info: { a: { b: 'c' } }
           }
         })
@@ -45,7 +44,6 @@ describe('HappyHttp test', () => {
           expect(response.data.args).toEqual({
             foo: 'bar',
             qux: ['baz', 'foo'],
-            date: '2019-12-31T16:00:00.000Z',
             info: '{"a":{"b":"c"}}'
           });
         });
