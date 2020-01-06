@@ -33,19 +33,20 @@ describe('HappyHttp test', () => {
       );
 
       return happy
-        .request<HttpResponse<{ args: object }>>({
+        .request<{ args: object }>({
           url: '/get',
           params: {
             qux: ['baz', 'foo'],
-            date: new Date('2020-01-01 00:00:00')
+            date: new Date('2020-01-01 00:00:00'),
+            info: { a: { b: 'c' } }
           }
         })
         .then(response => {
-          // @ts-ignore
           expect(response.data.args).toEqual({
             foo: 'bar',
             qux: ['baz', 'foo'],
-            date: '2019-12-31T16:00:00.000Z'
+            date: '2019-12-31T16:00:00.000Z',
+            info: '{"a":{"b":"c"}}'
           });
         });
     });
@@ -65,7 +66,6 @@ describe('HappyHttp test', () => {
           })
         )
         .then(data => {
-          // @ts-ignore
           expect(data.data.headers).toEqual(
             expect.objectContaining({
               'Content-Encoding': 'UTF-8, gbk',
@@ -76,19 +76,109 @@ describe('HappyHttp test', () => {
         });
     });
 
+    it('should send number http request body to server', () => {
+      happy = new HappyHttp();
+      return happy
+        .request<{ headers: object; data: any }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: 0
+        })
+        .then(response => {
+          expect(response.data.headers).toEqual(
+            expect.objectContaining({ 'Content-Type': 'application/json' })
+          );
+          expect(response.data.data).toBe('0');
+        });
+    });
+
+    it('should send boolean http request body to server', () => {
+      happy = new HappyHttp();
+      return happy
+        .request<{ headers: object; data: any }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: false
+        })
+        .then(response => {
+          expect(response.data.headers).toEqual(
+            expect.objectContaining({ 'Content-Type': 'application/json' })
+          );
+          expect(response.data.data).toBe('false');
+        });
+    });
+
     it('should send string http request body to server', () => {
       happy = new HappyHttp();
       return happy
         .request<{ headers: object; data: any }>({
           method: 'post',
           url: 'http://httpbin.org/post',
-          data: 'test_body'
+          data: 'Lorem ipsum dolor sit amet'
         })
         .then(response => {
           expect(response.data.headers).toEqual(
             expect.objectContaining({ 'Content-Type': 'text/plain' })
           );
-          expect(response.data.data).toBe('test_body');
+          expect(response.data.data).toBe('Lorem ipsum dolor sit amet');
+        });
+    });
+
+    it('should send plain object http request body to server', () => {
+      happy = new HappyHttp();
+      return happy
+        .request<{ headers: object; data: any }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: { foo: { bar: ['qux', 'baz'] }, bar: 'baz' }
+        })
+        .then(response => {
+          expect(response.data.headers).toEqual(
+            expect.objectContaining({ 'Content-Type': 'application/json' })
+          );
+          expect(response.data.data).toBe(
+            '{"foo":{"bar":["qux","baz"]},"bar":"baz"}'
+          );
+        });
+    });
+
+    it('should send form data http request body to server', () => {
+      happy = new HappyHttp();
+      const formData = new FormData();
+      formData.append('foo', 'bar');
+      formData.append('file', new Blob(['test data']), 'test.file');
+      return happy
+        .request<{
+          headers: { [index: string]: string };
+          form: { [index: string]: string };
+          files: { [index: string]: string };
+          data: any;
+        }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: formData
+        })
+        .then(response => {
+          const contentTypeHeader = response.data.headers['Content-Type'];
+          expect(contentTypeHeader.startsWith('multipart/form-data'));
+          expect(response.data.form['foo']).toBe('bar');
+          expect(response.data.files['file']).toBe('test data');
+        });
+    });
+
+    it('should send blob http request body to server', () => {
+      happy = new HappyHttp();
+      const formData = new FormData();
+      formData.append('foo', 'bar');
+      formData.append('file', new Blob(['test data']), 'test.file');
+      return happy
+        .request<{ data: any }>({
+          method: 'post',
+          url: 'http://httpbin.org/post',
+          data: new Blob(['test data'], { type: 'images/jpeg' })
+        })
+        .then(response => {
+          expect(response.data.data).toBe('test data');
         });
     });
 

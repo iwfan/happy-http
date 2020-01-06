@@ -8,6 +8,7 @@ export class HttpHeaders {
   private readonly headers = new Map<string, string[]>();
 
   constructor(init?: HttpHeadersInit | HttpHeaders) {
+    // Setup the default accept header.
     this.set('Accept', ['application/json', 'text/plain', '*/*']);
     if (init) {
       this.merge(init);

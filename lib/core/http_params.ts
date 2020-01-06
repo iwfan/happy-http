@@ -1,4 +1,4 @@
-import { isNil, isDate, isObject, isArray, toString } from '../helpers';
+import { isArray, isDate, isObject, toString } from '../helpers';
 
 export type HttpParamValue = Exclude<
   string | string[] | boolean | number | object | Date | RegExp,
