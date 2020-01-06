@@ -1,11 +1,11 @@
 {
   "name": "happy-http",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Decorator based HTTP client for the browser.",
   "keywords": ["happy", "happy-http", "http", "typescript", "decorators" ],
-  "main": "dist/happy.umd.js",
-  "module": "dist/happy.es5.js",
-  "typings": "dist/types/happy.d.ts",
+  "main": "dist/happy_http.umd.js",
+  "module": "dist/happy_http.es5.js",
+  "typings": "dist/types/core/happy_http.d.ts",
   "files": [
     "dist"
   ],
@@ -65,14 +65,6 @@
       "__test__",
       "dist"
     ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
-      }
-    },
     "collectCoverageFrom": [
       "lib/*.{js,ts}"
     ]
