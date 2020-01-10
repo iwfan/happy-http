@@ -1,11 +1,11 @@
 {
   "name": "happy-http",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Decorator based HTTP client for the browser.",
   "keywords": ["happy", "happy-http", "http", "typescript", "decorators" ],
-  "main": "dist/happy.umd.js",
-  "module": "dist/happy.es5.js",
-  "typings": "dist/types/happy.d.ts",
+  "main": "dist/happy_http.umd.js",
+  "module": "dist/happy_http.es5.js",
+  "typings": "dist/types/core/happy_http.d.ts",
   "files": [
     "dist"
   ],
@@ -19,9 +19,9 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'lib/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file lib",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
@@ -35,7 +35,7 @@
     "travis-deploy-once": "travis-deploy-once"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts": [
+    "{lib,test}/**/*.ts": [
       "prettier --write",
       "git add"
     ]
@@ -50,6 +50,10 @@
       ".(ts|tsx)": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "dist"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -57,22 +61,16 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "__test__",
+      "dist"
     ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
-      }
-    },
     "collectCoverageFrom": [
-      "src/*.{js,ts}"
+      "lib/*.{js,ts}"
     ]
   },
   "prettier": {
-    "semi": false,
+    "semi": true,
     "singleQuote": true
   },
   "commitlint": {
