@@ -30,6 +30,6 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
-      - run: npm test
-      - run: npm build
+        run: yarn
+      - run: yarn test
+      - run: yarn build
