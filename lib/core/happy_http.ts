@@ -11,6 +11,16 @@ export default class HappyHttp {
     this.client = new XHRAdapter();
   }
 
+  get<T>(url: string, init?: HttpRequest) {
+    const request = new HttpRequest({ url, method: 'GET' });
+
+    if (init) {
+      request.merge(init);
+    }
+
+    return this.request<T>(request);
+  }
+
   request<T>(init?: HttpRequest | HttpRequestInit) {
     if (init) {
       this.req.merge(init);
