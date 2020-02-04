@@ -71,7 +71,6 @@ export default class HappyHttp {
     }
     this.req.validate();
     this.req.process();
-    const response = this.client.send<T>(this.req);
-    return response;
+    return this.client.send<T>(this.req);
   }
 }
