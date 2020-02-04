@@ -196,4 +196,48 @@ describe('HappyHttp test', () => {
         });
     });
   });
+
+  it('should return correct result when invoke get method', async () => {
+    const happy = new HappyHttp({ baseUrl: 'http://httpbin.org/' });
+    return happy.get<{ method: string }>('anything').then(response => {
+      expect(response.data.method).toBe('GET');
+    });
+  });
+
+  it('should return correct result when invoke delete method', async () => {
+    const happy = new HappyHttp({ baseUrl: 'http://httpbin.org/' });
+    return happy.delete<{ method: string }>('anything').then(response => {
+      expect(response.data.method).toBe('DELETE');
+    });
+  });
+
+  it('should return correct result when invoke post method', async () => {
+    const happy = new HappyHttp({ baseUrl: 'http://httpbin.org/' });
+    return happy
+      .post<{ method: string; json: any }>('anything', 1)
+      .then(response => {
+        expect(response.data.method).toBe('POST');
+        expect(response.data.json).toBe(1);
+      });
+  });
+
+  it('should return correct result when invoke put method', async () => {
+    const happy = new HappyHttp({ baseUrl: 'http://httpbin.org/' });
+    return happy
+      .put<{ method: string; json: any }>('anything', 1)
+      .then(response => {
+        expect(response.data.method).toBe('PUT');
+        expect(response.data.json).toBe(1);
+      });
+  });
+
+  it('should return correct result when invoke patch method', async () => {
+    const happy = new HappyHttp({ baseUrl: 'http://httpbin.org/' });
+    return happy
+      .patch<{ method: string; json: any }>('anything', 1)
+      .then(response => {
+        expect(response.data.method).toBe('PATCH');
+        expect(response.data.json).toBe(1);
+      });
+  });
 });

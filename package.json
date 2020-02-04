@@ -2,7 +2,13 @@
   "name": "happy-http",
   "version": "0.0.2",
   "description": "Decorator based HTTP client for the browser.",
-  "keywords": ["happy", "happy-http", "http", "typescript", "decorators" ],
+  "keywords": [
+    "happy",
+    "happy-http",
+    "http",
+    "typescript",
+    "decorators"
+  ],
   "main": "dist/happy_http.umd.js",
   "module": "dist/happy_http.es5.js",
   "typings": "dist/types/core/happy_http.d.ts",

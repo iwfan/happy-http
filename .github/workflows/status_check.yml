@@ -1,6 +1,9 @@
 name: Status check on pull request
 
 on:
+  push:
+    branches:
+      - dev
   pull_request:
     branches:
       - master
@@ -15,6 +18,7 @@ jobs:
           node-version: 12
         env:
           CI: true
-      - run: npm install
-      - run: npm test
-      - run: npm build
+      - name: Install Dependencies
+        run: yarn
+      - run: yarn test
+      - run: yarn build
