@@ -2,6 +2,7 @@ import { HttpHeaders } from './http_headers';
 import { HttpRequest } from './http_request';
 
 export class HttpResponse<T = any> {
+  
   public readonly error!: string;
 
   constructor(
