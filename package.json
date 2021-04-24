@@ -2,6 +2,33 @@
   "name": "happy-http",
   "version": "0.0.2",
   "description": "Decorator based HTTP client for the browser.",
+  "main": "dist/happy-http.umd.js",
+  "module": "dist/happy-http.es5.js",
+  "typings": "dist/types/core/happy_http.d.ts",
+  "scripts": {
+    "husky": "husky install",
+    "start": "rollup -c rollup.config.ts --watch",
+    "build": "rollup -c rollup.config.ts",
+    "build:declaration": "tsc --declaration —-declarationDir dist --emitDeclarationOnly src/index.ts",
+    "test": "jest --coverage"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,scss,css,json,md}": [
+      "pretty-quick --staged"
+    ],
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iwfan/happy-http.git"
+  },
   "keywords": [
     "happy",
     "happy-http",
@@ -9,115 +36,38 @@
     "typescript",
     "decorators"
   ],
-  "main": "dist/happy_http.umd.js",
-  "module": "dist/happy_http.es5.js",
-  "typings": "dist/types/core/happy_http.d.ts",
-  "files": [
-    "dist"
-  ],
   "author": "iwfan <i.wangfancn@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iwfan/happy-http.git"
-  },
   "license": "MIT",
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'lib/**/*.ts' 'test/**/*.ts'",
-    "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file lib",
-    "start": "rollup -c rollup.config.ts -w",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
-    "deploy-docs": "ts-node tools/gh-pages-publish",
-    "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit": "git-cz",
-    "semantic-release": "semantic-release",
-    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
-  },
-  "lint-staged": {
-    "{lib,test}/**/*.ts": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "dist"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/",
-      "__test__",
-      "dist"
-    ],
-    "collectCoverageFrom": [
-      "lib/*.{js,ts}"
-    ]
-  },
-  "prettier": {
-    "semi": true,
-    "singleQuote": true
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+  "homepage": "https://github.com/iwfan/happy-http#readme",
+  "bugs": {
+    "url": "https://github.com/iwfan/happy-http/issues"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.1.2",
-    "@commitlint/config-conventional": "^7.1.2",
-    "@types/jest": "^23.3.2",
-    "@types/node": "^10.11.0",
-    "colors": "^1.3.2",
-    "commitizen": "^3.0.0",
-    "coveralls": "^3.0.2",
-    "cross-env": "^5.2.0",
-    "cz-conventional-changelog": "^2.1.0",
-    "husky": "^1.0.1",
-    "jest": "^23.6.0",
-    "jest-config": "^23.6.0",
-    "lint-staged": "^8.0.0",
-    "lodash.camelcase": "^4.3.0",
-    "prettier": "^1.14.3",
-    "prompt": "^1.0.0",
-    "replace-in-file": "^3.4.2",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.67.0",
-    "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.18.0",
-    "semantic-release": "^15.9.16",
-    "shelljs": "^0.8.3",
-    "travis-deploy-once": "^5.0.9",
-    "ts-jest": "^23.10.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-config-standard": "^8.0.1",
-    "typedoc": "^0.12.0",
-    "typescript": "^3.0.3"
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.13.16",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/preset-typescript": "^7.13.0",
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "@types/jest": "^26.0.22",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^6.0.0",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
+    "rollup": "^2.45.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "ts-jest": "^26.5.5",
+    "typescript": "^4.2.4"
   }
 }
