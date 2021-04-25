@@ -12,8 +12,8 @@ export type HttpMethods =
   | 'put'
   | 'patch'
   | 'head'
-  | 'options';
+  | 'options'
 
-export type HttpUrl = string;
+export type HttpUrl = string
 
-export type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+export type Mutable<T> = { -readonly [K in keyof T]: T[K] }
