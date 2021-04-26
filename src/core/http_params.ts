@@ -1,12 +1,12 @@
-import { isArray, isDate, isObject, toString } from '../helpers';
+import { isArray, isDate, isObject, toString } from '../helpers'
 
 export type HttpParamValue = Exclude<
   string | string[] | boolean | number | object | Date | RegExp,
   null
->;
+>
 
 export interface HttpParamsInit {
-  readonly [param: string]: HttpParamValue;
+  readonly [param: string]: HttpParamValue
 }
 
 export class HttpParams {
@@ -21,51 +21,50 @@ export class HttpParams {
       .replace(/%2B/gi, '+')
       .replace(/%3D/gi, '=')
       .replace(/%3F/gi, '?')
-      .replace(/%2F/gi, '/');
+      .replace(/%2F/gi, '/')
   }
 
   static queryPairFor(key: string, value: string) {
-    return `${key}=${this.encode(value)}`;
+    return `${key}=${this.encode(value)}`
   }
 
-  private params = new Map<string, HttpParamValue>();
+  private params = new Map<string, HttpParamValue>()
 
   constructor(init?: HttpParams | HttpParamsInit) {
     if (init) {
-      this.merge(init);
+      this.merge(init)
     }
   }
 
   merge(init: HttpParams | HttpParamsInit): HttpParams {
-    const entries =
-      init instanceof HttpParams ? init.entries() : Object.entries(init);
+    const entries = init instanceof HttpParams ? init.entries() : Object.entries(init)
     entries.forEach(([key, value]) => {
-      this.params.set(key, value);
-    });
-    return this;
+      this.params.set(key, value)
+    })
+    return this
   }
 
   entries() {
-    return [...this.params.entries()];
+    return [...this.params.entries()]
   }
 
   serialize(): string {
     return this.entries()
       .map(([key, value]) => {
         if (isDate(value)) {
-          return HttpParams.queryPairFor(key, value.toISOString());
+          return HttpParams.queryPairFor(key, value.toISOString())
         }
         if (isObject(value)) {
-          return HttpParams.queryPairFor(key, JSON.stringify(value));
+          return HttpParams.queryPairFor(key, JSON.stringify(value))
         }
         if (isArray(value)) {
           return value
             .map(toString)
             .map(str => HttpParams.queryPairFor(key, str))
-            .join('&');
+            .join('&')
         }
-        return HttpParams.queryPairFor(key, value as string);
+        return HttpParams.queryPairFor(key, value as string)
       })
-      .join('&');
+      .join('&')
   }
 }
