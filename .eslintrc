@@ -1,13 +1,23 @@
 {
+  "root": true,
+  "env": {
+    "jest/globals": true
+  },
   "parser": "@typescript-eslint/parser",
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "plugins": [
+    "@typescript-eslint",
+    "jest"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended"
+  ],
   "ignorePatterns": [
     "node_modules/",
     "dist/"
