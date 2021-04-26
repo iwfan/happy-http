@@ -24,7 +24,7 @@ jobs:
         id: version_diff
         run: |
           current_version=$(node -pe "require('./package.json').version")
-          latest_version=$(npm view happy_new@latest version)
+          latest_version=$(npm view happy-http@latest version)
           [[ "$current_version" != "$latest_version" ]] && changed=true || changed=false
 
           echo "current_version=$current_version" >> $GITHUB_ENV
